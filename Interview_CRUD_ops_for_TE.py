@@ -91,7 +91,7 @@ print("4. Remove a running / pending campaign")
 remove_pending_jobs(te)
 # print(te.printstats())
 
-# # 5. Change order of pending campaign
-# print(" 5. Change order of pending campaign")
-# update_pending_tests(te)
-# print(te.printstats())
+# 5. Change order of pending campaign
+print(" 5. Change order of pending campaign")
+update_pending_tests(te)
+print(te.printstats())
