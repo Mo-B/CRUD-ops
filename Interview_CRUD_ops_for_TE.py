@@ -51,15 +51,14 @@ def list_available_te(obj):
 
 def update_pending_tests(obj):
     for k, v in te.items.items():  # python3,
-        if v[1] == 'Pending':
+        if v[0] == 'Available' and v[1] == 'Pending':
             v[1] = '(Updated) Pass'
 
 
 def remove_pending_jobs(obj):
     for k, v in te.items.items():
-        if k == 'Running' and v[1] == 'Pending':
-            te.remove(k)
-
+        if k == 'Anite2' and v[1] == 'Pending':
+            print(k)
 
 
 # TE Operations Test.
@@ -85,14 +84,14 @@ list_available_te(te)
 # 3. Add a Campaign
 print("3. Add a Campaign")
 create_te(te, {'Anritsu2': ['Running', 'Pending']})
-list_available_te(te)
+print(te.printstats())
 
 # 4. Remove a running/pending campaign
 print("4. Remove a running / pending campaign")
 remove_pending_jobs(te)
-print(te.printstats())
+# print(te.printstats())
 
-# 5. Change order of pending campaign
-print(" 5. Change order of pending campaign")
-update_pending_tests(te)
-print(te.printstats())
+# # 5. Change order of pending campaign
+# print(" 5. Change order of pending campaign")
+# update_pending_tests(te)
+# print(te.printstats())

@@ -6,7 +6,7 @@ class te_stack:
         self.items.update(item)
 
     def remove(self, item):
-        self.items.pop(item)
+        del(self.items[item])
 
     def is_empty(self):
         if self.items == {}:
