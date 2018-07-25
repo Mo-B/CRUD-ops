@@ -54,10 +54,6 @@ def update_pending_tests(obj, te_name, job_state):
         if k == te_name:
             if v[1] == 'Pending':
                 v[1] = job_state
-            else:
-                print("\n TE is not in Pending state, can't change")
-        else:
-            print("\n Can't find this TE")
 
 
 def remove_pending_jobs(obj, te_name):
@@ -139,9 +135,11 @@ def main_menu(te):
                     break
             create_te(te, {te_name: [te_state, job_state]})
             te.printstats()
-
+            print("\n")
         elif selection == 3:
+            print("\n")
             list_available_te(te)
+            print("\n")
         elif selection == 4:
             avail_te = []
             for k, v in te.items_.items():
@@ -150,10 +148,12 @@ def main_menu(te):
             te_name = input('Enter TE Name : ')
             if te_name in avail_te:
                 remove_pending_jobs(te, te_name)
+                print("\n After removal: \n")
+                print(te.printstats())
+                print("\n")
             else:
                 print("TE name not in stack.")
-            print("\n After removal: \n")
-            print(te.printstats())
+
         elif selection == 5:
             pending_jobs_are = []
             for k, v in te.items_.items():
@@ -165,7 +165,7 @@ def main_menu(te):
             update_pending_tests(te, te_to_change, new_job_state)
             print("\n After update: \n")
             print(te.printstats())
-
+            print("\n")
         elif selection == 6:
             print("\n GoodBye")
             break
