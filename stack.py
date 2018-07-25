@@ -1,21 +1,22 @@
 class te_stack:
     def __init__(self):
-        self.items = {}  # Dictionary to store TE info
+        self.items_ = {}  # Dictionary to store TE info
 
     def push(self, item):
-        self.items.update(item)
+        self.items_.update(item)
 
     def remove(self, item):
-        del(self.items[item])
+        self.items_.pop(item)
 
     def is_empty(self):
-        if self.items == {}:
+        if self.items_ == {}:
             return True
         return False
 
     def peek(self):
         if not self.is_empty():
-            return self.items[-1]
+            return self.items_[-1]
 
     def printstats(self):
-        return self.items
+        # return self.items
+        print("{" + "\n".join("{}: {}".format(k, v) for k, v in self.items_.items()) + "}")
