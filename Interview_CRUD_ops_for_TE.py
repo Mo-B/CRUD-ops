@@ -134,6 +134,7 @@ def main_menu(te):
                 else:
                     break
             create_te(te, {te_name: [te_state, job_state]})
+            print("\n")
             te.printstats()
             print("\n")
         elif selection == 3:
