@@ -39,26 +39,31 @@ from stack import te_stack
 
 def create_te(obj, dict_args):    # Method to add TEs
     obj.push(dict_args)
-    #print("Added TE {} to DB".format(dict_args))
+    # print("Added TE {} to DB".format(dict_args))
 
 
 def list_available_te(obj):
     # for k, v in te.items.iteritems(): # python2
-    for k, v in te.items.items():  # python3,
+    for k, v in te.items_.items():  # python3,
         if "Available" in v:
             print(k)
 
 
-def update_pending_tests(obj):
-    for k, v in te.items.items():  # python3,
-        if v[0] == 'Available' and v[1] == 'Pending':
-            v[1] = '(Updated) Pass'
+def update_pending_tests(obj, te_name, job_state):
+    for k, v in te.items_.items():  # python3,
+        if k == te_name:
+            if v[1] == 'Pending':
+                v[1] = job_state
+            else:
+                print("\n TE is not in Pending state, can't change")
+        else:
+            print("\n Can't find this TE")
 
 
-def remove_pending_jobs(obj):
-    for k, v in te.items.items():
-        if k == 'Anite2' and v[1] == 'Pending':
-            print(k)
+def remove_pending_jobs(obj, te_name):
+    for k in list(te.items_.keys()):
+        if k == te_name:
+            te.remove(k)
 
 
 # TE Operations Test.
@@ -68,30 +73,105 @@ create_te(te, {'Anritsu': ['Running', 'Pass']})
 create_te(te, {'Anite1': ['Running', 'Fail']})
 create_te(te, {'Anite2': ['Running', 'Pending']})
 create_te(te, {'Azimuth': ['Available', 'Pending']})
-create_te(te, {'Spirent': ['Available', 'Pass']})
-create_te(te, {'Agilent': ['Available', 'Pass']})
 
 # 1. List running Pass/Fail & pending campaigns
 #    -P/F/Pending
 #    -Show Test Equip ID
-print("1. List running Pass/Fail & pending campaigns")
+print("\n")
+print("Adding few minimum TEs")
 if not te.is_empty():
-    print(te.printstats())
-
-# 2. List availablle TE's only
-print("2. List availablle TE's only")
-list_available_te(te)
-# 3. Add a Campaign
-print("3. Add a Campaign")
-create_te(te, {'Anritsu2': ['Running', 'Pending']})
-print(te.printstats())
-
-# 4. Remove a running/pending campaign
-print("4. Remove a running / pending campaign")
-remove_pending_jobs(te)
+    te.printstats()
+print("\n")
+# # 2. List availablle TE's only
+# print("2. List availablle TE's only")
+# list_available_te(te)
+# # 3. Add a Campaign
+# print("3. Add a Campaign")
+# create_te(te, {'Anritsu2': ['Running', 'Pending']})
 # print(te.printstats())
 
-# 5. Change order of pending campaign
-print(" 5. Change order of pending campaign")
-update_pending_tests(te)
-print(te.printstats())
+# 4. Remove a running/pending campaign
+# print("4. Remove a running / pending campaign")
+# remove_pending_jobs(te, "Anritsu")
+# print("\n")
+# te.printstats()
+# print("\n")
+# print(te.printstats())
+
+# # 5. Change order of pending campaign
+# print(" 5. Change order of pending campaign")
+# update_pending_tests(te, 'Azimuth', 'Updated')
+# print("\n After update: \n")
+# print(te.printstats())
+
+
+def main_menu(te):
+    print("1. List running Pass/Fail & pending campaigns")
+    print("2. Add a Campaign")
+    print("3. List availablle TE's only")
+    print("4. Remove a running / pending campaign")
+    print("5. Change order of pending campaign")
+    print("6. Exit")
+    selection = True
+    while selection:
+        selection = int(input("Enter Choice : "))
+        if selection == 1:
+            if not te.is_empty():
+                print("\n")
+                te.printstats()
+                print("\n")
+
+        elif selection == 2:
+            te_state = ""
+            job_state = ""
+            te_name = input('Enter TE Name : ')
+            while True:
+                te_state = input('Enter TE state (Running/Available) : ')
+                if not te_state.istitle() or te_state not in ('Running', 'Available'):
+                    print("Not allowed choice. Retry")
+                else:
+                    break
+            while True:
+                job_state = input('Enter job result (Pass/Fail/Pending) : ')
+                if not job_state.istitle() or job_state not in ('Pass', 'Fail', 'Pending'):
+                    print("Not allowed choice. Retry")
+                else:
+                    break
+            create_te(te, {te_name: [te_state, job_state]})
+            te.printstats()
+
+        elif selection == 3:
+            list_available_te(te)
+        elif selection == 4:
+            avail_te = []
+            for k, v in te.items_.items():
+                avail_te.append(k)
+            print("Available TE's are: {}".format(avail_te))
+            te_name = input('Enter TE Name : ')
+            if te_name in avail_te:
+                remove_pending_jobs(te, te_name)
+            else:
+                print("TE name not in stack.")
+            print("\n After removal: \n")
+            print(te.printstats())
+        elif selection == 5:
+            pending_jobs_are = []
+            for k, v in te.items_.items():
+                if "Pending" in v:
+                    print(k, v)
+                    pending_jobs_are.append(k)
+            te_to_change = input('Enter TE name : ')
+            new_job_state = input('Enter new job state : ')
+            update_pending_tests(te, te_to_change, new_job_state)
+            print("\n After update: \n")
+            print(te.printstats())
+
+        elif selection == 6:
+            print("\n GoodBye")
+            break
+        else:
+            print("Invalid choice. Enter 1-6")
+
+
+main_menu(te)
+# print(te.printstats())
